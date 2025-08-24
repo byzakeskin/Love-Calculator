@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Love Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playwrite+HU:wght@100;200;300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+  <img src="bg.jpg" alt="Arka Plan" class="background-img">
+  <!-- Header -->
+  <header>
+    <div class="mobile-header-img"></div>
+
+    <div class="image-row"></div>
+  </header>
+  <!-- Ses butonu ve ses kontrol paneli -->
+  <div class="music-control">
+    <img id="musicToggle" src="volume.png" alt="Müzik Butonu" />
+    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+  </div>
+
+  <!-- Müzik dosyası -->
+  <audio id="backgroundMusic" loop>
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Ana İçerik -->
+  <div id="content">
+    <!-- Sol görsel -->
+    <img style="animation: squareMove 2s infinite linear;" src="left.png" alt="Kalp" class="side-img">
+
+    <!-- Ortadaki form -->
+    <div class="form-area">
+      <p style="font-family: 'Great Vibes', cursive; font-size: 60px; color: rgb(44, 44, 44); margin-bottom: 30px;">
+        Love Calculator
+      </p>
+      <input class="input" type="text" id="name1" placeholder="First Name">
+      <input class="input" type="text" id="name2" placeholder="Second Name">
+      <button id="loveBtn" onclick="calculateLove()" disabled>❤︎</button>
+      <output id="result">%</output>
+      <button id="shareBtn"class="animated-share" onclick="shareResult()" style="margin-top: 10px; display: none;">Share Result</button>
+    </div>
+
+    <!-- Sağ görsel -->
+    <img style="animation: tilt-move 4s infinite ease-in-out;" src="right.png" alt="Kalp" class="side-img">
+  </div>
+  
+  <!-- Footer -->
+  <footer>
+    <span style="float: right;">Love. Love. Love.</span>
+  </footer>
+
+  
+  <script>
+  const name1 = document.getElementById("name1");
+  const name2 = document.getElementById("name2");
+  const btn   = document.getElementById("loveBtn");
+
+  name1.addEventListener("input", checkInputs);
+  name2.addEventListener("input", checkInputs);
+
+  function checkInputs() {
+    if (name1.value.trim() !== "" && name2.value.trim() !== "") {
+      btn.disabled = false; // aktif
+    } else {
+      btn.disabled = true;  // pasif
+    }
+  }
+
+  function upperCaseFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+
+  function calculateLove() {
+    const name1Val = upperCaseFirstLetter(document.getElementById("name1").value.trim());
+    const name2Val = upperCaseFirstLetter(document.getElementById("name2").value.trim());
+    const randomPercentage = Math.floor(Math.random() * 101);
+
+    document.getElementById("result").innerHTML = name1Val + " and " + name2Val + " = %" + randomPercentage;
+    document.getElementById("shareBtn").style.display = "inline-block";
+  }
+
+function shareResult() {
+  const resultText = document.getElementById("result").innerText;
+  if (navigator.share) {
+    navigator.share({
+      title: "Love Calculator Result",
+      text: resultText,
+      url: window.location.href
+    }).then(() => {
+      console.log("Shared successfully!");
+    }).catch((error) => {
+      console.log("Sharing was cancelled or an error occurred:", error);
+    });
+  } else {
+    alert("Your browser does not support this sharing feature. Please copy the result manually: " + resultText);
+  }
+}
+
+  const music = document.getElementById("backgroundMusic");
+  const toggleBtn = document.getElementById("musicToggle");
+  const volumeSlider = document.getElementById("volumeSlider");
+
+  let isPlaying = false;
+
+  toggleBtn.addEventListener("click", () => {
+    if (!isPlaying) {
+      music.play();
+      isPlaying = true;
+      toggleBtn.style.opacity = "1";
+    } else {
+      music.pause();
+      isPlaying = false;
+      toggleBtn.style.opacity = "0.6";
+    }
+  });
+
+  volumeSlider.addEventListener("input", () => {
+    music.volume = volumeSlider.value;
+  });
+</script>
+  
+</body>
+</html>
